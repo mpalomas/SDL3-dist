@@ -27,14 +27,14 @@ set(sdl3_sym_lib_name "${lib_root_folder}/SDL3.lib")
 set(sdl3_shared_lib_name "${lib_root_folder}/SDL3.dll")
 # TODO macos and linux
 
-add_library(sdl3_shared SHARED IMPORTED GLOBAL)
-add_library(sdl3::sdl3_shared ALIAS sdl3_shared)
-set_property(TARGET sdl3_shared PROPERTY
+add_library(SDL3_shared SHARED IMPORTED GLOBAL)
+add_library(SDL3::SDL3_shared ALIAS SDL3_shared)
+set_property(TARGET SDL3_shared PROPERTY
             IMPORTED_LOCATION ${sdl3_shared_lib_name})
-set_property(TARGET sdl3_shared PROPERTY
+set_property(TARGET SDL3_shared PROPERTY
             IMPORTED_IMPLIB ${sdl3_sym_lib_name})
-add_library(sdl3 INTERFACE IMPORTED GLOBAL)
-set_property(TARGET sdl3 PROPERTY
-    INTERFACE_LINK_LIBRARIES sdl3_shared)
-add_library(sdl3::sdl3 ALIAS sdl3)
-set_target_properties(wgpu PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${PROJECT_SOURCE_DIR}/include)
+add_library(SDL3 INTERFACE IMPORTED GLOBAL)
+set_property(TARGET SDL3 PROPERTY
+    INTERFACE_LINK_LIBRARIES SDL3_shared)
+add_library(SDL3::SDL3 ALIAS SDL3)
+set_target_properties(SDL3 PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${PROJECT_SOURCE_DIR}/include)
