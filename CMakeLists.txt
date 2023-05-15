@@ -1,38 +1,38 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.26)
 project(SDL3-dist VERSION 0.0.1 DESCRIPTION "SDL3-dist" LANGUAGES CXX C)
 set(CMAKE_SUPPRESS_REGENERATION true)
 
 # Set a default build type if none was specified
 set(default_build_type "Release")
 
-# Set all configuration types
-set(CMAKE_CONFIGURATION_TYPES Debug Release RelWithDebInfo)
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-    message(STATUS "Setting build type to '${default_build_type}' as none was specified.")
-    set(CMAKE_BUILD_TYPE "${default_build_type}" CACHE
-        STRING "Choose the type of build." FORCE)
-    # Set the possible values of build type for cmake-gui
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
-    "Release" "RelWithDebInfo")
+if(CMAKE_SYSTEM_NAME STREQUAL Darwin)
+    set(platform "apple-clang-arm64")
+else()
+    set(platform "win32-x64")
 endif()
-
-set(platform "win32-x64")
 set(lib_root_folder "${PROJECT_SOURCE_DIR}/lib/${platform}")
 set(build_type_folder "release")
 
-set(SDL3_BUILD_DLL TRUE)
 set(lib_root_folder "${lib_root_folder}/shared/${build_type_folder}")
-# TODO test for macos and linux
-set(sdl3_sym_lib_name "${lib_root_folder}/SDL3.lib")
-set(sdl3_shared_lib_name "${lib_root_folder}/SDL3.dll")
-# TODO macos and linux
+# TODO test linux
+if(CMAKE_SYSTEM_NAME STREQUAL Darwin)
+    set(sdl3_shared_lib_name "${lib_root_folder}/libSDL3.1.0.0.dlyb")
+else()
+    set(sdl3_sym_lib_name "${lib_root_folder}/SDL3.lib")
+    set(sdl3_shared_lib_name "${lib_root_folder}/SDL3.dll")
+endif()
 
 add_library(SDL3_shared SHARED IMPORTED GLOBAL)
 add_library(SDL3::SDL3_shared ALIAS SDL3_shared)
-set_property(TARGET SDL3_shared PROPERTY
-            IMPORTED_LOCATION ${sdl3_shared_lib_name})
-set_property(TARGET SDL3_shared PROPERTY
-            IMPORTED_IMPLIB ${sdl3_sym_lib_name})
+if(CMAKE_SYSTEM_NAME STREQUAL Darwin)
+    set_property(TARGET SDL3_shared PROPERTY
+                IMPORTED_LOCATION ${sdl3_shared_lib_name})
+else()
+    set_property(TARGET SDL3_shared PROPERTY
+                IMPORTED_LOCATION ${sdl3_shared_lib_name})
+    set_property(TARGET SDL3_shared PROPERTY
+                IMPORTED_IMPLIB ${sdl3_sym_lib_name})
+endif()
 add_library(SDL3 INTERFACE IMPORTED GLOBAL)
 set_property(TARGET SDL3 PROPERTY
     INTERFACE_LINK_LIBRARIES SDL3_shared)
