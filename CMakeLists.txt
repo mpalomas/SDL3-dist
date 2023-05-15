@@ -16,7 +16,7 @@ set(build_type_folder "release")
 set(lib_root_folder "${lib_root_folder}/shared/${build_type_folder}")
 # TODO test linux
 if(CMAKE_SYSTEM_NAME STREQUAL Darwin)
-    set(sdl3_shared_lib_name "${lib_root_folder}/libSDL3.1.0.0.dlyb")
+    set(sdl3_shared_lib_name "${lib_root_folder}/libSDL3.1.0.0.dylib")
 else()
     set(sdl3_sym_lib_name "${lib_root_folder}/SDL3.lib")
     set(sdl3_shared_lib_name "${lib_root_folder}/SDL3.dll")
